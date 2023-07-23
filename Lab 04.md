@@ -1,27 +1,20 @@
-### **Linux 常用文件指令** - 操作筆記
-**sudo apt update:** 
-**sudo apt upgrade**升级软件包
+### **Linux 常用文件指令** - 操作學習筆記
+**sudo apt update:** 用來更新系統套件清單（Package List）的。
 
-**Linux 系统目錄结構**
+**sudo apt upgrade**: 用來更新系統中已安裝軟體套件的版本。
 
-**請切換到”/” root directory, 用ll -a命令, 分析比較你所看到的目錄**
+**ll or ls -lrt:** ll 這個指令通常是用 ls -l 這個指令的別名（alias）。ls 是用來列出目錄內容的指令，而加上 -l 參數可以顯示詳細的資訊，包括檔案的權限、擁有者、檔案大小、修改日期等。
 
-**另外, 請用Ubuntu的檔案總管確認一下Linux 系统目錄结構, 並且和以上的結比較一下; 最後將以上兩個您個人完成的畫面截圖更新到GitHub, 並且說明一下在終瑞機下的輸出中, ”.”和 “..”什麼是意思?**
+**cd：** 是 "change directory" 的縮寫，用於更改當前工作目錄到指定的目錄中。
 
-**ll or **ls -lrt: 列出目錄**
+**pwd：** 是 "print working directory" 的縮寫，用於顯示你當前的工作目錄的絕對路徑。
 
-**cd：切換目錄**
+**mkdir：** 用於在檔案系統中創建新的目錄（資料夾）。
 
-**pwd：顯示目前位置的路徑**
+**rm:** 目的是用來刪除（移除）文件或目錄。
 
-**mkdir：建立新的目錄**
+**cat:** 命令的目的是將一個或多個文件的內容輸出到終端或者連接（合併）它們，也就是將多個文件的內容串聯在一起並打印到終端。
 
-**rm: 刪除文件或目錄**
+**head & tail:** 查看文件內容的”頭”或”尾”
 
-**cat: 查看文件內容**
-**head & tail: 查看文件內容的”頭”或”尾”**
-
-1. **使用gedit (a default GUI text editor in the *Ubuntu*  operating system)**
-
-**head & tail**
-### **chmod:** **Linux chmod命令**
+**chmod:** 是Change Mode的縮寫，它允許使用者改變檔案或目錄的存取權限，控制誰可以讀取、寫入或執行這些檔案。
