@@ -103,3 +103,55 @@ Apache 提供了豐富的設定選項，根據需求來進行自定義設定。�
 在 `/etc/apache2/` 目錄下找到主要的設定檔，包括 `apache2.conf` 和 `ports.conf`，以及虛擬主機設定檔所在的 `sites-available` 和 `sites-enabled` 目錄。
 
 在修改這些設定檔之前，建議先備份它們，以防止出現意外的錯誤。
+
+**SSL/TLS 加密：** 對於許多網站來說，安全性是至關重要的。
+如果打算在網站上處理用戶的敏感資訊，例如登錄帳號、密碼、信用卡號等，建議使用 SSL/TLS 加密來保護數據傳輸。這可以防止數據在網路上被截取或竊聽。
+
+在 Apache 中，可以使用 `mod_ssl` 模組來啟用 SSL/TLS 加密。啟用 SSL/TLS 加密的基本步驟：
+
+1. **安裝 mod_ssl：** 確保 `mod_ssl` 模組已經安裝在系統上。
+
+   ```
+   sudo apt install libapache2-mod-ssl
+   ```
+
+2. **產生 SSL/TLS 憑證：** SSL/TLS 加密需要有效的數位憑證。可以自己產生自簽名憑證，或者購買來自受信任的證書授權機構（CA）的憑證。
+
+   以下是自簽名憑證的範例產生方式：
+
+   ```
+   sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/apache-selfsigned.key -out /etc/ssl/certs/apache-selfsigned.crt
+   ```
+
+   這將在 `/etc/ssl/private/` 目錄下產生一個私鑰檔案 `apache-selfsigned.key` 和在 `/etc/ssl/certs/` 目錄下產生一個憑證檔案 `apache-selfsigned.crt`。
+
+3. **設定 SSL/TLS 設定檔：** 在 Apache 的虛擬主機設定檔中，新增以下指令來啟用 SSL/TLS 加密。
+
+   ```
+   <VirtualHost *:443>
+       ServerName mydomain.com
+       DocumentRoot /var/www/my_website
+
+       SSLEngine on
+       SSLCertificateFile /etc/ssl/certs/apache-selfsigned.crt
+       SSLCertificateKeyFile /etc/ssl/private/apache-selfsigned.key
+
+       # 可選：如果有中介憑證 (Intermediate Certificate) 的話，可以加上以下指令
+       # SSLCertificateChainFile /path/to/intermediate_certificate.crt
+
+       ErrorLog ${APACHE_LOG_DIR}/error.log
+       CustomLog ${APACHE_LOG_DIR}/access.log combined
+   </VirtualHost>
+   ```
+
+   將 `mydomain.com` 替換為你的網站域名，並確保 `SSLCertificateFile` 和 `SSLCertificateKeyFile` 指向正確的憑證檔案位置。
+
+4. **重啟 Apache 服務：** 重新啟動 Apache 服務以應用變更。
+
+   ```
+   sudo systemctl restart apache2
+   ```
+
+現在，這個網站就已經啟用了 SSL/TLS 加密，用戶在瀏覽器中輸入網址後 將透過加密連線進行傳輸。
+
+請注意，自簽名憑證在瀏覽器中可能會顯示安全性警告，因為它沒有受到受信任的證書授權機構簽署。如果你需要真正受信任的 SSL/TLS 憑證，可以購買來自證書授權機構的憑證，這樣瀏覽器就不會顯示警告。
