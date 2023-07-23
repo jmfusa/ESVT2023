@@ -1,64 +1,105 @@
-當你想要在自己的電腦上建立一個本地的網頁伺服器，Apache 是一個非常常見且易於使用的選擇。在這裡，我將詳細說明安裝 Apache 網頁伺服器以及其應用的步驟與順序：
+### **安裝 Apache 網頁伺服器以及其應用的步驟** - 學習筆記
 
-步驟一：安裝 Apache 網頁伺服器
+**Step 1：更新套件列表**
+在開始安裝之前，首先要確保系統套件列表是最新的。打開終端機（Terminal）並執行以下指令：
 
-1. 開啟瀏覽器，前往 Apache 官方網站下載頁面：https://httpd.apache.org/download.cgi
+```
+sudo apt update
+```
 
-2. 在下載頁面中，找到適用於你的作業系統的二進制安裝檔案，通常有兩個版本可以選擇：32 位元或 64 位元。請根據你的作業系統版本下載適當的安裝檔案。
+**Step 2：安裝 Apache 網頁伺服器**
+更新套件列表後，安裝 Apache 。在終端機中執行以下指令：
 
-3. 下載完成後，執行安裝檔案，按照安裝程序的指示進行安裝。在安裝過程中，你可能需要選擇安裝的組件，確保選擇安裝 Apache 網頁伺服器。
+```
+sudo apt install apache2
+```
 
-步驟二：配置 Apache 網頁伺服器
+當系統提示時，輸入管理員密碼（sudo 密碼）。安裝過程中會詢問是否確定要安裝，輸入 `Y` 然後按下 Enter 繼續。
 
-1. 開啟安裝目錄，通常在 "C:\Program Files\Apache Software Foundation\Apache2.x\"（x代表版本號碼）。
+**Step 3：啟動 Apache 服務**
+安裝完成後，Apache 會自動啟動。可以再次確認一下它是否正在運行：
 
-2. 進入 "conf" 子目錄，找到名為 "httpd.conf" 的設定檔案，這是 Apache 網頁伺服器的主要配置檔案。
+```
+sudo systemctl status apache2
+```
 
-3. 使用文字編輯器（例如 Notepad++ 或 Visual Studio Code）開啟 "httpd.conf" 配置檔案。
+如果一切正常，看到以下的輸出：
 
-4. 找到並修改以下設定，根據需要進行相應的更改：
-   - 修改 "ServerName"：設定伺服器名稱，可以設置為 "localhost"。
-   - 修改 "DocumentRoot"：設定網站文件的根目錄路徑，通常是 "C:/Apache/htdocs"。
-   - (可選) 設定其他模組和功能：根據需要，你可以啟用或停用其他模組，例如 PHP 模組等。
+```
+● apache2.service - The Apache HTTP Server
+   Loaded: loaded (/lib/systemd/system/apache2.service; enabled; vendor preset: enabled)
+   Active: active (running) since ... ; ...
+```
 
-5. 儲存並關閉 "httpd.conf" 配置檔案。
+**Step 4：測試 Apache**
+完成安裝後，可以在瀏覽器中輸入伺服器 IP 地址或主機名稱來測試 Apache 是否正常運行。如果一切正常，會看到 Apache 的預設歡迎頁面。
 
-步驟三：測試 Apache 網頁伺服器
+**應用及順序：**
+安裝完成後， Ubuntu 系統上現在就有了一個運行中的 Apache 網頁伺服器。這使我能夠在伺服器上托管靜態網站、動態網站、API 或其他 web 應用程式。
 
-1. 啟動 Apache 網頁伺服器：開啟命令提示字元 (Windows) 或終端機 (Mac/Linux)，輸入以下指令：
+要開始使用 Apache 開發網站或應用，以下步驟進行：
+
+1. **建立網站目錄：** 將網站檔案放在適當的目錄中，預設情況下，Apache 預設的網站根目錄位於 `/var/www/html`。
+
+2. **設定虛擬主機：** 如果打算在同一台伺服器上運行多個網站，可以設定虛擬主機，使每個網站有自己的獨立設定。
+
+3. **設定伺服器：** 根據需求，需要調整 Apache 的設定檔。主要的設定檔位於 `/etc/apache2/apache2.conf` 或 `/etc/apache2/sites-available` 目錄中。
+
+4. **重啟 Apache 服務：** 對設定進行更改後，需要重新啟動 Apache 服務，使更改生效：
+
    ```
-   apachectl start
-   ```
-   或
-   ```
-   apache2ctl start
-   ```
-   如果看到 "Apache 已啟動" 或類似的訊息，表示伺服器已成功啟動。
-
-2. 開啟瀏覽器，輸入網址 "http://localhost/" 或 "http://127.0.0.1/"，如果看到一個預設的 Apache 歡迎頁面，表示安裝成功。
-
-步驟四：建立網站並測試應用
-
-1. 在 "DocumentRoot" 設定的目錄下，建立一個新資料夾，作為你的網站根目錄，例如 "my_website"。
-
-2. 在 "my_website" 資料夾中，建立一個名為 "index.html" 的 HTML 檔案，作為網站的首頁內容。
-
-3. 在 "index.html" 中編寫你想要顯示的內容，例如：
-   ```html
-   <!DOCTYPE html>
-   <html>
-   <head>
-       <title>My Website</title>
-   </head>
-   <body>
-       <h1>Hello, World!</h1>
-       <p>Welcome to my website.</p>
-   </body>
-   </html>
+   sudo systemctl restart apache2
    ```
 
-4. 儲存並關閉 "index.html" 檔案。
+5. **開發與測試：** 在網站目錄中進行網站開發，然後在瀏覽器中測試你的網站。
 
-5. 回到瀏覽器，重新輸入網址 "http://localhost/my_website/"，應該可以看到你剛建立的網站內容。
+6. **防火牆設定：** 如果伺服器上有防火牆（例如 UFW），需要確保防火牆允許外部訪問 Apache 的相應端口（預設為 80）。
 
-至此，你已成功安裝 Apache 網頁伺服器並建立了你的第一個網站！這只是開始，你可以持續學習並深入了解 Apache 的配置和應用，並開始開發更複雜的網站和網頁應用程式。祝你學習的過程愉快！
+**虛擬主機設定：**
+虛擬主機允許在同一個伺服器上運行多個網站，每個網站有自己獨立的域名或主機名。這是非常有用的，尤其是想要在同一個伺服器上托管多個不同的網站或應用時。
+
+在Apache中，可以通過以下步驟設定虛擬主機：
+
+1. **創建虛擬主機設定檔：** 在`/etc/apache2/sites-available/`目錄中創建一個新的虛擬主機設定檔，例如`my_website.conf`。
+
+2. **設定虛擬主機：** 在該設定檔中，指定網站的域名或主機名、網站目錄、日誌文件位置等等。
+
+   ```
+   <VirtualHost *:80>
+       ServerName mydomain.com
+       DocumentRoot /var/www/my_website
+       ErrorLog ${APACHE_LOG_DIR}/error.log
+       CustomLog ${APACHE_LOG_DIR}/access.log combined
+   </VirtualHost>
+   ```
+
+   需要將 `mydomain.com` 替換為我要的網站域名，並將 `/var/www/my_website` 替換為想要的網站檔案所在的路徑。
+
+3. **啟用虛擬主機：** 使用 `a2ensite` 命令啟用虛擬主機設定檔。
+
+   ```
+   sudo a2ensite my_website
+   ```
+
+4. **重啟 Apache 服務：** 確保重新啟動 Apache 服務以應用變更。
+
+   ```
+   sudo systemctl restart apache2
+   ```
+
+現在，虛擬主機已經設定完成，並可以在瀏覽器中通過該虛擬主機的域名訪問網站。
+
+**其他 Apache 設定：**
+Apache 提供了豐富的設定選項，根據需求來進行自定義設定。以下是一些常見的設定選項：
+
+1. **安全性設定：** 可以設定伺服器的安全性，例如禁止目錄瀏覽、限制特定目錄的訪問權限等。
+
+2. **模組啟用：** Apache 支援許多模組，這些模組可以增強伺服器的功能，例如開啟 URL 重寫、啟用 SSL 加密等。
+
+3. **日誌設定：** 可以設定伺服器的存取日誌和錯誤日誌的位置和格式。
+
+4. **性能優化：** 調整 Apache 的設定以提高伺服器的性能，例如處理連線數、併發連線等。
+
+在 `/etc/apache2/` 目錄下找到主要的設定檔，包括 `apache2.conf` 和 `ports.conf`，以及虛擬主機設定檔所在的 `sites-available` 和 `sites-enabled` 目錄。
+
+在修改這些設定檔之前，建議先備份它們，以防止出現意外的錯誤。
