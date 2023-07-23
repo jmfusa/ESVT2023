@@ -48,4 +48,4 @@ for face in results.face_annotations:
 * `results = client.face_detection(image=image)`：執行人臉偵測。
 * `for face in results.face_annotations: print(face.bounding_poly) print(face.landmarks) print(face.emotions)`：列印人臉的資訊。
 
-**實作Github連結: ** Lab7.ipynb
+**實作Github連結: ** https://github.com/jmfusa/ESVT2023/blob/main/Lab7.ipynb
