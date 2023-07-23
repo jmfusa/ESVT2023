@@ -1,68 +1,51 @@
+### **Google VM應用 - AI最經典應用之人臉偵測(Face Detection)實作** - 學習筆記
 
+**Step 1:** 需要建立一個 Google Cloud Platform (GCP) 專案。可以在 GCP 控制台上執行此操作。
 
-1. 在 Google Cloud 上建立一個專案。
+**Step 2:** 建立了專案，要啟用 Cloud Vision API。這可以在 GCP 控制台上的 API 和服務頁面上執行此操作。
 
-要建立一個專案，您需要前往 Google Cloud Console，然後點擊 **建立專案**。您需要提供專案名稱和描述。
+**Step 3:** 啟用 Cloud Vision API 後，需要建立一個服務帳戶。在 GCP 控制台上的 IAM 和管理頁面上執行此操作。
 
-2. 啟用 Cloud Vision API。
+**Step 4:** 建立服務帳戶後，要為服務帳戶新增權限。在 GCP 控制台上的 IAM 和管理頁面上的角色和專案頁面上執行此操作。
 
-要啟用 Cloud Vision API，您需要前往 Google Cloud Console，然後點擊 **API 和服務**。然後，點擊 **啟用 API**，並搜索 **Cloud Vision**。點擊 **啟用**。
+**Step 5:** 為服務帳戶新增權限後，你需要下載服務帳戶的金鑰。你可以在 GCP 控制台上的 IAM 和管理頁面上的金鑰頁面上執行此操作。
 
-3. 上傳一張包含人臉的圖片。
+**Step 6:** 下載服務帳戶的金鑰後，要將金鑰新增到 Python 環境。使用 `pip` 套件管理器來執行此操作。
 
-您可以使用 Google Cloud Console 或命令列上傳圖片。要使用 Google Cloud Console 上傳圖片，您需要前往 Google Cloud Console，然後點擊 **儲存帳戶**。然後，點擊 **上傳檔案**。您需要選擇包含人臉的圖片。
+**Step 7:** 將金鑰新增到 Python 環境後，就可以開始使用 Cloud Vision API 來偵測圖片中的人臉。使用 `google.cloud.vision` 套件來執行此操作。
 
-要使用命令列上傳圖片，您可以使用 `gsutil cp` 命令。例如，要將名為 `image.jpg` 的圖片上傳到名為 `my-bucket` 的儲存桶，您可以使用以下命令：
+下面是使用 `google.cloud.vision` 套件來偵測圖片中的人臉的程式碼：
 
-```
-gsutil cp image.jpg gs://my-bucket
-```
+```python
+import io
+from google.cloud import vision
 
-4. 使用 Cloud Vision API 來偵測圖片中的人臉。
+# 建立 Cloud Vision 客戶端
+client = vision.ImageAnnotatorClient()
 
-要使用 Cloud Vision API 來偵測圖片中的人臉，您需要使用 Cloud Vision API 的 HTTP 要求。您可以使用 Google Cloud Console 或命令列來建立 HTTP 要求。
+# 讀取圖片
+with io.open('image.jpg', 'rb') as image_file:
+  image = image_file.read()
 
-要使用 Google Cloud Console 建立 HTTP 要求，您需要前往 Google Cloud Console，然後點擊 **API 和服務**。然後，點擊 **Cloud Vision API**。然後，點擊 **要求**。您需要提供圖片的 URL 和您要偵測的資訊類型。
+# 執行人臉偵測
+results = client.face_detection(image=image)
 
-要使用命令列建立 HTTP 要求，您可以使用 `curl` 命令。例如，要偵測圖片 `image.jpg` 中的人臉，您可以使用以下命令：
-
-```
-curl -X POST \
-  -H "Authorization: Bearer YOUR_API_KEY" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "requests": [
-      {
-        "image": {
-          "content": "data:image/jpeg;base64,<base64-encoded-image>"
-        },
-        "features": [
-          {
-            "type": "FACE_DETECTION"
-          }
-        ]
-      }
-    ]
-  }' \
-  "https://vision.googleapis.com/v1/images:annotate"
+# 列印人臉的資訊
+for face in results.face_annotations:
+  print(face.bounding_poly)
+  print(face.landmarks)
+  print(face.emotions)
 ```
 
-5. 使用人臉的座標、大小和旋轉角度來裁剪圖片。
+該程式碼將會列印圖片中每個人臉的座標、標記和表情。
 
-您可以使用 Cloud Vision API 回傳的人臉的座標、大小和旋轉角度來裁剪圖片。要裁剪圖片，您可以使用 `ImageMagick` 或 `PIL`。
+以下是程式碼中各個部分的說明：
 
-要使用 `ImageMagick` 裁剪圖片，您可以使用 `crop` 命令。例如，要裁剪名為 `image.jpg` 的圖片，並只保留人臉，您可以使用以下命令：
+* `import io`：匯入 `io` 模組，以便可以讀取圖片。
+* `from google.cloud import vision`：匯入 `google.cloud.vision` 模組，以便可以使用 Cloud Vision API。
+* `client = vision.ImageAnnotatorClient()`：建立 Cloud Vision 客戶端。
+* `with io.open('image.jpg', 'rb') as image_file: image = image_file.read()`：讀取圖片。
+* `results = client.face_detection(image=image)`：執行人臉偵測。
+* `for face in results.face_annotations: print(face.bounding_poly) print(face.landmarks) print(face.emotions)`：列印人臉的資訊。
 
-```
-convert image.jpg -crop 100x100+100+100 cropped-image.jpg
-```
-
-要使用 `PIL` 裁剪圖片，您可以使用 `Image.crop()` 方法。例如，要裁剪名為 `image.jpg` 的圖片，並只保留人臉，您可以使用以下程式碼：
-
-```
-from PIL import Image
-
-image = Image.open('image.jpg')
-face = image.crop((100, 100, 200, 200))
-face.save('cropped-image.jpg')
-```
+**實作Github連結: ** 
